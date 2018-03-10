@@ -15,7 +15,18 @@ export class BusHubService {
         return this.busInfoChange;
     }
 
-    
+    async getLatestBusCount(): Promise<number> {
+        try {
+            let response = await this.http
+                .get('api/businfo')
+                .toPromise();
+            return response.json();
+            //return response.json().data as number;
+        } catch (error) {
+            await this.handleError(error);
+            return 0;
+        }
+    }
 
     async publishNewBusCount(iBusCount: number): Promise<void> {
         try {

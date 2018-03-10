@@ -14,36 +14,32 @@ namespace SenegalBus.Controllers
   [Route("api/[controller]")]
   public class BusInfoController : Controller
   {
-    private readonly IHubContext<BusAvaibilityHub> _hubContext;
-
+    private readonly IHubContext<BusAvaibilityHub> mHubContext;
+    private static BusInfo mBusInfo = new BusInfo();
     public BusInfoController(IHubContext<BusAvaibilityHub> ihubContext)
     {
-      _hubContext = ihubContext;
+      mHubContext = ihubContext;
     }
     //// GET: api/<controller>
     [HttpGet]
-    public IEnumerable<string> Get()
+    public int Get()
     {
-      return new string[] { "value1", "value2" };
+      return mBusInfo.NumAvailable;
     }
 
-    // GET api/<controller>/5
-    //[HttpGet("[action]")]
-    //public string Get(int id)
-    //{
-    //  return "value";
-    //}
 
     //// POST api/<controller>
     [HttpPost]
     public void Post([FromBody]int value)
     {
-      var hubContext = _hubContext;
-      var wBusInfo = new BusInfo()
-      {
-        NumAvailable = value
-      };
-      hubContext.Clients.All.InvokeAsync("sendBusInfo", wBusInfo);
+      var hubContext = mHubContext;
+      //var wBusInfo = new BusInfo()
+      //{
+      //  NumAvailable = value
+      //};
+
+      mBusInfo.NumAvailable = value;
+      hubContext.Clients.All.InvokeAsync("sendBusInfo", mBusInfo);
     }
 
     // PUT api/<controller>/5
@@ -59,9 +55,9 @@ namespace SenegalBus.Controllers
     //}
 
     // DELETE api/<controller>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
+    //[HttpDelete("{id}")]
+    //public void Delete(int id)
+    //{
+    //}
   }
 }
