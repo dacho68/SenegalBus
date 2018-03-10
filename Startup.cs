@@ -29,11 +29,12 @@ namespace SenegalBus
         builder
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .WithOrigins("http://localhost:4200");
+            .WithOrigins("http://localhost:5001");
       }));
 
-      services.AddMvc();
+
       services.AddSignalR();
+      services.AddMvc();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,11 +54,14 @@ namespace SenegalBus
       }
 
 
-      app.UseStaticFiles();
 
+      app.UseStaticFiles();
       app.UseCors("CorsPolicy");
 
-
+      app.UseSignalR(routes =>
+      {
+        routes.MapHub<BusAvaibilityHub>("bushub");
+      });
 
       app.UseMvc(routes =>
       {
@@ -70,10 +74,7 @@ namespace SenegalBus
                   defaults: new { controller = "Home", action = "Index" });
       });
 
-      app.UseSignalR(routes =>
-      {
-        routes.MapHub<BusAvaibilityHub>("hubbus");
-      });
+
     }
   }
 }

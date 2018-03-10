@@ -22,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\app\bus-info.ts" />
-    <None Remove="ClientApp\app\hub-service.service.ts" />
+    <None Remove="ClientApp\app\bus-hub.service.ts" />
+    <None Remove="ClientApp\app\bus-info.type.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\bus-info.ts" />
-    <TypeScriptCompile Include="ClientApp\app\hub-service.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\bus-info.type.ts" />
+    <TypeScriptCompile Include="ClientApp\app\bus-hub.service.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

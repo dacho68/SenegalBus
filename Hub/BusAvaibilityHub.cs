@@ -10,7 +10,11 @@ namespace SenegalBus.Hub
     {
       public void SendBusInfo(BusInfo iBusInfo)
       {
-      Clients.All.InvokeAsync("SendBusInfo", iBusInfo);
+        Clients.All.InvokeAsync("sendBusInfo", iBusInfo);
       }
-    }
+      public void SendToAll(string name, string message)
+      {
+        Clients.All.InvokeAsync("sendToAll", name, message);
+      }
+  }
 }
