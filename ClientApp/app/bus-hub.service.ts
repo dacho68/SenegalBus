@@ -7,7 +7,7 @@ import { HubConnection } from '@aspnet/signalr-client';
 export class BusHubService {
     private _hubConnection: HubConnection;
 
-    busInfoChange: Subject<number> = new Subject<number>();
+    busInfoChange: Subject<BusInfo> = new Subject<BusInfo>();
 
     constructor(private http: Http) { }
 
@@ -15,20 +15,27 @@ export class BusHubService {
         return this.busInfoChange;
     }
 
-    async  getLatestBusInfo(): Promise<BusInfo> {
-        try {
-            let response = await this.http
-                .get('api/businfo')
-                .toPromise();
-            return response.json();
-        } catch (error) {
-           await this.handleError(error);
-          let wEmptyData = new BusInfo();
-           return wEmptyData;
-        }
+    //async  getLatestBusInfo(): Promise<BusInfo> {
+    //    try {
+    //        let response = await this.http
+    //            .get('api/businfo')
+    //            .toPromise();
+    //        return response.json();
+    //    } catch (error) {
+    //       await this.handleError(error);
+    //      let wEmptyData = new BusInfo();
+    //       return wEmptyData;
+    //    }
 
+    //}
+    getLatestBusInfo(){
+        return this.http
+            .get('api/businfo')
+            .map(response => response.json() as BusInfo)
+            .toPromise();
     }
 
+    //test Async with Post
     async publishNewBusCount(iBusCount: number): Promise<void> {
         try {
             let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -43,8 +50,8 @@ export class BusHubService {
         console.log(error);
     }
 
-    private emitBusCountChangeEvent(iBusCount: number ) {
-        this.busInfoChange.next(iBusCount);
+    private emitBusInfoChangeEvent(iBusInfo: BusInfo ) {
+        this.busInfoChange.next(iBusInfo);
     }
 
     connectToHub() {
@@ -56,7 +63,7 @@ export class BusHubService {
 
         this._hubConnection.on('SendBusInfo', (busInfo: BusInfo) => {
             console.log('new data!')
-            this.emitBusCountChangeEvent(busInfo.numAvailable);
+            this.emitBusInfoChangeEvent(busInfo);
         });
     }
 }

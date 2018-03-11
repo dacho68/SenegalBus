@@ -16,7 +16,8 @@ export class CounterComponent implements OnInit {
 
     ngOnInit() {
         this.subscription = this.busHubService.getBusInfoChangeEmitter()
-            .subscribe(item => this.selectedBusCount(item));
+            .subscribe(item => this.onBusInfoChange(item));
+
         this.busHubService.getLatestBusInfo()
             .then(x => this.currentCount = x.numAvailable)
             .catch(err => console.log(err));
@@ -24,8 +25,8 @@ export class CounterComponent implements OnInit {
 
 
 
-    selectedBusCount(item: number) {
-        this.currentCount = item;
+    onBusInfoChange(item: BusInfo) {
+        this.currentCount = item.numAvailable;
     }
 
     incrementCounter() {

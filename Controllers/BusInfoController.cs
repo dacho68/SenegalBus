@@ -33,8 +33,7 @@ namespace SenegalBus.Controllers
     public void Post([FromBody]int value)
     {
       var hubContext = mHubContext;
-     
-
+    
       mBusInfo.NumAvailable = value;
       hubContext.Clients.All.InvokeAsync("sendBusInfo", mBusInfo);
     }
