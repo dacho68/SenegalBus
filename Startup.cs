@@ -13,12 +13,22 @@ namespace SenegalBus
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    //public Startup(IConfiguration configuration)
+    //{
+    //  Configuration = configuration;
+    //}
+
+
+    public IHostingEnvironment HostingEnvironment { get; }
+    public IConfiguration Configuration { get; }
+
+    public Startup(IHostingEnvironment env, IConfiguration config)
     {
-      Configuration = configuration;
+      HostingEnvironment = env;
+      Configuration = config;
     }
 
-    public IConfiguration Configuration { get; }
+    
 
   
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -27,11 +37,23 @@ namespace SenegalBus
 
       services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
       {
-        builder
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .WithOrigins("http://senegalbus.azurewebsites.net");
- //           .WithOrigins("http://localhost:5001");
+
+        if (HostingEnvironment.IsDevelopment())
+        {
+          builder
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .WithOrigins("http://senegalbus.azurewebsites.net");
+        }
+        else
+        {
+          builder
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .WithOrigins("http://localhost:5001");
+        }
+
+
       }));
 
 
