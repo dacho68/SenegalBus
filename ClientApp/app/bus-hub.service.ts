@@ -1,15 +1,21 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { Injectable, Inject  } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Subject } from 'rxjs';
 import { HubConnection } from '@aspnet/signalr-client';
+import { PlatformLocation } from '@angular/common';
+//import { APP_BASE_HREF } from '@angular/common'; 
 
 @Injectable()
 export class BusHubService {
-    private _hubConnection: HubConnection;
+    private hubConnection: HubConnection;
+  //  private baseUrl: string;
 
     busInfoChange: Subject<BusInfo> = new Subject<BusInfo>();
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private platformLocation: PlatformLocation) {
+
+       
+    }
 
     public getBusInfoChangeEmitter() {
         return this.busInfoChange;
@@ -55,13 +61,19 @@ export class BusHubService {
     }
 
     connectToHub() {
-        this._hubConnection = new HubConnection('http://localhost:5001/bushub');
-        this._hubConnection
+        let plat = this.platformLocation as any;
+        let loc = plat.location as any;
+        let baseUrl = loc.origin ;
+        console.log(baseUrl);
+      //  this.hubConnection = new HubConnection('http://localhost:5001/bushub');
+        let hubUrl = baseUrl + '/bushub';
+        this.hubConnection = new HubConnection(hubUrl);
+        this.hubConnection
             .start()
             .then(() => console.log('Connection started!'))
             .catch(err => console.log('Error while establishing connection :('));
 
-        this._hubConnection.on('SendBusInfo', (busInfo: BusInfo) => {
+        this.hubConnection.on('SendBusInfo', (busInfo: BusInfo) => {
             console.log('new data!')
             this.emitBusInfoChangeEvent(busInfo);
         });
