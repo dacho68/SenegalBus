@@ -22,9 +22,9 @@ namespace SenegalBus.Controllers
     }
     //// GET: api/<controller>
     [HttpGet]
-    public int Get()
+    public BusInfo Get()
     {
-      return mBusInfo.NumAvailable;
+      return mBusInfo;
     }
 
 
@@ -33,31 +33,12 @@ namespace SenegalBus.Controllers
     public void Post([FromBody]int value)
     {
       var hubContext = mHubContext;
-      //var wBusInfo = new BusInfo()
-      //{
-      //  NumAvailable = value
-      //};
+     
 
       mBusInfo.NumAvailable = value;
       hubContext.Clients.All.InvokeAsync("sendBusInfo", mBusInfo);
     }
 
-    // PUT api/<controller>/5
-    //[HttpPut("{id}")]
-    //public void NumberBusAvail(int id, [FromBody]int value)
-    //{
-    //  var hubContext = _hubContext;
-    //  var wBusInfo = new BusInfo()
-    //  {
-    //    NumAvailable = value
-    //  };
-    //  hubContext .Clients.All.InvokeAsync("SendBusInfo", wBusInfo);
-    //}
-
-    // DELETE api/<controller>/5
-    //[HttpDelete("{id}")]
-    //public void Delete(int id)
-    //{
-    //}
+   
   }
 }

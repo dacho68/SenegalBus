@@ -14,11 +14,15 @@ export class CounterComponent implements OnInit {
         this.busHubService = hubService;
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.subscription = this.busHubService.getBusInfoChangeEmitter()
             .subscribe(item => this.selectedBusCount(item));
-        this.currentCount = await this.busHubService.getLatestBusCount();
+        this.busHubService.getLatestBusInfo()
+            .then(x => this.currentCount = x.numAvailable)
+            .catch(err => console.log(err));
     }
+
+
 
     selectedBusCount(item: number) {
         this.currentCount = item;
